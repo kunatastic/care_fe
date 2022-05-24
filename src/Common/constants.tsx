@@ -664,3 +664,21 @@ export const getCameraPTZ = (precision: number) => [
   { icon: "fa fa-undo", label: "Reset", action: "reset" },
   { icon: "fas fa-expand", label: "Full Screen", action: "fullScreen" },
 ];
+
+export const TYPE_VALUE_MAP: { [key: string]: number } = {
+  Transportation: 2,
+  Pharmacist: 3,
+  Volunteer: 5,
+  StaffReadOnly: 9,
+  Staff: 10,
+  Doctor: 15,
+  Reserved: 20,
+  WardAdmin: 21,
+  LocalBodyAdmin: 23,
+  DistrictLabAdmin: 25,
+  DistrictReadOnlyAdmin: 29,
+  DistrictAdmin: 30,
+  StateLabAdmin: 35,
+  StateReadOnlyAdmin: 39,
+  StateAdmin: 40,
+};

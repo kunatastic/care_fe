@@ -9,6 +9,7 @@ import {
   getUserList,
   getUserListFacility,
   deleteUser,
+  partialUpdateUser,
 } from "../../Redux/actions";
 import Pagination from "../Common/Pagination";
 import { navigate, useQueryParams } from "raviger";
@@ -16,13 +17,14 @@ import { USER_TYPES, RESULTS_PER_PAGE_LIMIT } from "../../Common/constants";
 import { InputSearchBox } from "../Common/SearchBox";
 import { FacilityModel } from "../Facility/models";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import { IconButton, CircularProgress } from "@material-ui/core";
+import { IconButton, CircularProgress, Button } from "@material-ui/core";
 import LinkFacilityDialog from "./LinkFacilityDialog";
 import UserDeleteDialog from "./UserDeleteDialog";
 import * as Notification from "../../Utils/Notifications.js";
 import classNames from "classnames";
 import UserFilter from "./UserFilter";
 import { make as SlideOver } from "../Common/SlideOver.gen";
+import UserRoleSelectDialog from "./UserRoleSelectDialog";
 
 const Loading = loadable(() => import("../Common/Loading"));
 const PageTitle = loadable(() => import("../Common/PageTitle"));
@@ -65,6 +67,13 @@ export default function ManageUsers() {
     const filter = { ...qParams, ...data };
     updateQuery(filter);
     setShowFilters(false);
+  };
+
+  const compareRoles = (userRole: string) => {
+    const roles = currentUser.data.user_type;
+    const currentUserRoleIndex = USER_TYPES.indexOf(roles);
+    const userRoleIndex = USER_TYPES.indexOf(userRole);
+    return userRoleIndex < currentUserRoleIndex;
   };
 
   const updateQuery = (params: any) => {
@@ -215,7 +224,31 @@ export default function ManageUsers() {
     window.location.reload();
   };
 
+  const handleRoleChangeSubmit = async (userRole: number) => {
+    const username = userData.username;
+    console.log(username, userRole);
+    const res = await dispatch(
+      partialUpdateUser(username, { user_type: userRole })
+    );
+    if (res.status >= 200) {
+      Notification.Success({
+        msg: "User role updated successfully",
+      });
+    }
+
+    setUserData({ show: false, username: "", name: "" });
+    // window.location.reload();
+  };
+
   const handleDelete = (user: any) => {
+    setUserData({
+      show: true,
+      username: user.username,
+      name: `${user.first_name} ${user.last_name}`,
+    });
+  };
+
+  const handleUserRoleChange = (user: any) => {
     setUserData({
       show: true,
       username: user.username,
@@ -348,6 +381,22 @@ export default function ManageUsers() {
                       Role:
                     </div>
                     <div className="font-semibold">{user.user_type}</div>
+                  </div>
+                )}
+                {compareRoles(user.user_type) && (
+                  <div className="mt-2">
+                    <div className="text-gray-500 leading-relaxed font-light">
+                      Update Role:
+                    </div>
+                    <div>
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        onClick={() => handleUserRoleChange(user)}
+                      >
+                        Update Role
+                      </Button>
+                    </div>
                   </div>
                 )}
                 {user.local_body_object && (
@@ -577,6 +626,14 @@ export default function ManageUsers() {
           name={userData.name}
           handleCancel={handleCancel}
           handleOk={handleSubmit}
+        />
+      )}
+      {userData.show && (
+        <UserRoleSelectDialog
+          name={userData.name}
+          handleCancel={handleCancel}
+          handleOk={handleRoleChangeSubmit}
+          currentUserType={currentUser.data.user_type}
         />
       )}
     </div>

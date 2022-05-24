@@ -61,6 +61,7 @@ export const fireRequest = (
     if (path.length > 0) {
       request.path += "/" + path.join("/");
     }
+    console.log(path, request.path);
     if (request.method === undefined || request.method === "GET") {
       request.method = "GET";
       const qs = querystring.stringify(params);
@@ -160,7 +161,9 @@ export const fireRequestV2 = (
   key: string,
   path: any = [],
   params: any = {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   successCallback: any = () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   errorCallback: any = () => {},
   pathParam?: any,
   altKey?: string

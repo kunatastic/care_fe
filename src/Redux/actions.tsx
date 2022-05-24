@@ -33,6 +33,10 @@ export const updateUserPnconfig = (params: object, pathParams: object) => {
   return fireRequest("updateUserPnconfig", [], params, pathParams);
 };
 
+export const partialUpdateUser = (username: string, params: object) => {
+  return fireRequest("partialUpdateUser", [username], params);
+};
+
 // Facility
 export const createFacility = (params: object) => {
   return fireRequest("createFacility", [], params);
