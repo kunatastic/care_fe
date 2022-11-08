@@ -649,7 +649,9 @@ export const ConsultationDetails = (props: any) => {
                     <Link
                       key={p.text}
                       className={tabButtonClasses(tab === p.text)}
-                      href={`/facility/${facilityId}/patient/${patientId}/consultation/${consultationId}/${p.text.toLocaleLowerCase()}`}
+                      href={`/facility/${facilityId}/patient/${patientId}/consultation/${consultationId}/${p.text.toLocaleLowerCase()}${
+                        tab === "UPDATES" ? "#updates" : ""
+                      }`}
                     >
                       {p.desc}
                     </Link>
@@ -660,8 +662,11 @@ export const ConsultationDetails = (props: any) => {
           </div>
         </div>
         {tab === "UPDATES" && (
-          <div className="flex xl:flex-row flex-col">
+          <div className="flex xl:flex-row flex-col" id="updates">
             <div className="xl:w-2/3 w-full">
+              <div className="bg-red-600 h-screen">{`/facility/${facilityId}/patient/${patientId}/consultation/${consultationId}/${
+                tab === "UPDATES" ? "#updates" : ""
+              }`}</div>
               <PageTitle title="Info" hideBack={true} breadcrumbs={false} />
               {!consultationData.discharge_date && (
                 <section className="bg-white shadow-sm rounded-md flex items-stretch w-full flex-col lg:flex-row overflow-hidden">
